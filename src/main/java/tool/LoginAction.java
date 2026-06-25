@@ -29,6 +29,12 @@ public class LoginAction extends HttpServlet {
         String id = request.getParameter("id");
         String password = request.getParameter("password");
 
+        // 💡【多角的検証】画面からどんな文字が本当に届いているかコンソールに強制表示
+        System.out.println("==========================================");
+        System.out.println("【デバッグ】画面から届いたID: [" + id + "]");
+        System.out.println("【デバッグ】画面から届いたPW: [" + password + "]");
+        System.out.println("==========================================");
+
         TeacherDao dao = new TeacherDao();
         TeacherBean teacher = dao.login(id, password);
 

@@ -4,29 +4,28 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import bean.TeacherBean;
 
 public class TeacherDao {
-    // 💡 画像から判明したH2データベースの正しい接続情報に修正！
     private final String URL = "jdbc:h2:~/bank"; 
-    private final String USER = "sa";            // H2の標準ユーザー
-    private final String PASSWORD = "";          // H2の標準パスワード（空っぽ）
+    private final String USER = "sa";            
+    private final String PASSWORD = "";          
 
     public TeacherBean login(String id, String password) {
         TeacherBean teacher = null;
-        
-        // 💡 テーブル名を日本語の「教員」から、画像に写っている「TEACHER」に変更！
-        // 💡 カラム名もH2に合わせて英語（ID, PASSWORD）に直しています
         String sql = "SELECT * FROM TEACHER WHERE ID = ? AND PASSWORD = ?";
 
         try {
-            // 💡 ドライバーも PostgreSQL から「H2用」に修正！
             Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
         }
+
+        // 💡 1. 最初に自動でテーブルとデータを復元・作成する（H2コンソール不要対策）
+        initializeDatabase();
 
         try (
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -38,20 +37,45 @@ public class TeacherDao {
             try (ResultSet rs = pStmt.executeQuery()) {
                 if (rs.next()) {
                     teacher = new TeacherBean();
-                    // 💡 H2からデータを取り出す名前も、英語のカラム名に合わせます
                     teacher.setId(rs.getString("ID"));
                     teacher.setPassword(rs.getString("PASSWORD"));
                     teacher.setName(rs.getString("NAME"));
-                    
-                    // 💡 学校コードの列名は「SCHOOL_CD」か「SCHOOL_CODE」のことが多いです。
-                    // もしエラーが出たら、学校の設計書の英語名に合わせてみてください
-                    teacher.setSchoolCode(rs.getString("SCHOOL_CD")); 
+                    try {
+                        teacher.setSchoolCode(rs.getString("SCHOOL_CD")); 
+                    } catch (Exception e) {
+                        try { teacher.setSchoolCode(rs.getString("SCHOOL_CODE")); } catch (Exception ex) {}
+                    }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("【重大エラー】ログイン処理中に例外が発生しました！");
+            e.printStackTrace(); 
             return null;
         }
         return teacher;
+    }
+
+    // 💡 テーブルがない場合に自動作成・データ挿入を行うメソッド
+    private void initializeDatabase() {
+        String createTableSql = "CREATE TABLE IF NOT EXISTS TEACHER ("
+                + "ID VARCHAR(10) PRIMARY KEY, "
+                + "PASSWORD VARCHAR(10) NOT NULL, "
+                + "NAME VARCHAR(10) NOT NULL, "
+                + "SCHOOL_CD CHAR(3))";
+        
+        String insertDataSql = "INSERT INTO TEACHER (ID, PASSWORD, NAME, SCHOOL_CD) "
+                + "SELECT 'admin', '1234', '大原 太郎', 'TO1' WHERE NOT EXISTS (SELECT 1 FROM TEACHER WHERE ID = 'admin')";
+
+        try (
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            Statement stmt = conn.createStatement()
+        ) {
+            stmt.execute(createTableSql);
+            stmt.execute(insertDataSql);
+            System.out.println("【自動化ログ】TEACHERテーブルとadminデータの存在を確認・作成しました。");
+        } catch (Exception e) {
+            System.err.println("【自動化ログ】データベース初期化でエラーが発生しました。");
+            e.printStackTrace();
+        }
     }
 }
