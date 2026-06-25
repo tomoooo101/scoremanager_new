@@ -273,7 +273,7 @@
                         <td>${student.classNum}</td>
                         <td>
                             <c:choose>
-                                <c:when class="${student.isAttend}">〇</c:when>
+                                <c:when test="${student.attend}">〇</c:when>
                                 <c:otherwise>×</c:otherwise>
                             </c:choose>
                         </td>

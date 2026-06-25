@@ -6,17 +6,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class SchoolDao {
-    private final String URL = "jdbc:postgresql://localhost:5432/kadai";
-    private final String USER = "postgres";
-    private final String PASSWORD = "password"; // ★ご自身のパスワードに修正してください
+    private final String URL = "jdbc:h2:~/bank";
+    private final String USER = "sa";
+    private final String PASSWORD = "";
 
-    // 学校コードを渡すと、学校名などを調べて返すメソッド（必要に応じて使います）
     public String getSchoolName(String schoolCd) {
         String schoolName = "";
-        String sql = "SELECT 学校名 FROM 学校 WHERE 学校コード = ?";
+        String sql = "SELECT NAME FROM SCHOOL WHERE CD = ?";
 
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return schoolName;
@@ -30,7 +29,7 @@ public class SchoolDao {
 
             try (ResultSet rs = pStmt.executeQuery()) {
                 if (rs.next()) {
-                    schoolName = rs.getString("学校名");
+                    schoolName = rs.getString("NAME");
                 }
             }
         } catch (Exception e) {

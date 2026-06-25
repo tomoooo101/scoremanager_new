@@ -1,29 +1,48 @@
 package tool;
 
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import bean.SubjectBean;
+import dao.SubjectDao;
 
-public class SubjectCreateAction {
+@WebServlet("/SubjectCreate.action")
+public class SubjectCreateAction extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("subject_create.jsp").forward(request, response);
+    }
 
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        
-        String method = request.getMethod();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
 
-        if (method.equals("GET")) {
-            // 【GETの場合】ただ登録画面のJSPの名前を返す
-            return "subject_create.jsp";
-            
+        String cd = request.getParameter("cd");
+        String name = request.getParameter("name");
+
+        if (cd == null || cd.trim().isEmpty() || name == null || name.trim().isEmpty()) {
+            request.setAttribute("error", "科目コードと科目名は必須です");
+            request.getRequestDispatcher("subject_create.jsp").forward(request, response);
+            return;
+        }
+
+        SubjectBean subject = new SubjectBean();
+        subject.setCd(cd.trim());
+        subject.setName(name.trim());
+
+        SubjectDao dao = new SubjectDao();
+        boolean result = dao.save(subject);
+
+        if (result) {
+            response.sendRedirect("SubjectList.action");
         } else {
-            // 【POSTの場合】「登録」ボタンが押されたとき
-            
-            // 本来はここでDAOの登録処理を行います
-            // String cd = request.getParameter("cd");
-            // String name = request.getParameter("name");
-            
-            // 登録後はメニュー画面（Menu.action）へ自動で戻す
-            response.sendRedirect("Menu.action");
-            return null; // リダイレクト時は遷移先JSPがないためnullを返します
+            request.setAttribute("error", "登録に失敗しました");
+            request.getRequestDispatcher("subject_create.jsp").forward(request, response);
         }
     }
 }

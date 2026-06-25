@@ -9,16 +9,15 @@ import java.util.List;
 import bean.TestBean;
 
 public class TestDao {
-    private final String URL = "jdbc:postgresql://localhost:5432/kadai";
-    private final String USER = "postgres";
-    private final String PASSWORD = "password"; // ★ご自身のパスワードに修正してください
+    private final String URL = "jdbc:h2:~/bank";
+    private final String USER = "sa";
+    private final String PASSWORD = "";
 
-    // ① 条件（学生、科目、回数）を指定して、特定のテスト1件を取得するメソッド
     public TestBean get(String studentNo, String subjectCd, int no) {
         TestBean test = null;
-        String sql = "SELECT * FROM 成績 WHERE 学生番号 = ? AND 科目コード = ? AND 回数 = ?";
+        String sql = "SELECT * FROM SCORE WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ?";
 
-        try { Class.forName("org.postgresql.Driver"); } catch (Exception e) { return null; }
+        try { Class.forName("org.h2.Driver"); } catch (Exception e) { return null; }
 
         try (
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -31,33 +30,29 @@ public class TestDao {
             try (ResultSet rs = pStmt.executeQuery()) {
                 if (rs.next()) {
                     test = new TestBean();
-                    test.setStudentNo(rs.getString("学生番号"));
-                    test.setSubjectCd(rs.getString("科目コード"));
-                    test.setNo(rs.getInt("回数"));
-                    test.setPoint(rs.getInt("点数"));
-                    test.setClassNum(rs.getString("クラス番号"));
-                    test.setSchoolCode(rs.getString("学校コード"));
+                    test.setStudentNo(rs.getString("STUDENT_NO"));
+                    test.setSubjectCd(rs.getString("SUBJECT_CD"));
+                    test.setNo(rs.getInt("NO"));
+                    test.setPoint(rs.getInt("POINT"));
+                    test.setClassNum(rs.getString("CLASS_NUM"));
+                    test.setSchoolCode(rs.getString("SCHOOL_CD"));
                 }
             }
         } catch (Exception e) { e.printStackTrace(); }
         return test;
     }
 
-    // ② テストの点数を保存（新規登録、またはすでにあれば更新）するメソッド
     public boolean save(TestBean test) {
-        // すでにデータがあるか確認
         TestBean exists = get(test.getStudentNo(), test.getSubjectCd(), test.getNo());
         String sql;
 
         if (exists == null) {
-            // なければ新規登録 (INSERT)
-            sql = "INSERT INTO 成績 (学生番号, 科目コード, 回数, 点数, クラス番号, 学校コード) VALUES (?, ?, ?, ?, ?, ?)";
+            sql = "INSERT INTO SCORE (STUDENT_NO, SUBJECT_CD, NO, POINT, CLASS_NUM, SCHOOL_CD) VALUES (?, ?, ?, ?, ?, ?)";
         } else {
-            // あれは更新 (UPDATE)
-            sql = "UPDATE 成績 SET 点数 = ?, クラス番号 = ? WHERE 学生番号 = ? AND 科目コード = ? AND 回数 = ?";
+            sql = "UPDATE SCORE SET POINT = ?, CLASS_NUM = ? WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ?";
         }
 
-        try { Class.forName("org.postgresql.Driver"); } catch (Exception e) { return false; }
+        try { Class.forName("org.h2.Driver"); } catch (Exception e) { return false; }
 
         try (
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -85,42 +80,23 @@ public class TestDao {
             return false;
         }
     }
-    
+
     public List<TestBean> getList() {
-
         List<TestBean> list = new ArrayList<>();
-
-        String sql = "SELECT * FROM 成績";
+        String sql = "SELECT * FROM SCORE";
 
         try {
-            Class.forName("org.postgresql.Driver");
-
-            Connection conn =
-                DriverManager.getConnection(
-                    URL, USER, PASSWORD);
-
-            PreparedStatement ps =
-                conn.prepareStatement(sql);
-
+            Class.forName("org.h2.Driver");
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()){
-
-                TestBean bean =
-                    new TestBean();
-
-                bean.setStudentNo(
-                    rs.getString("学生番号"));
-
-                bean.setSubjectCd(
-                    rs.getString("科目コード"));
-
-                bean.setNo(
-                    rs.getInt("回数"));
-
-                bean.setPoint(
-                    rs.getInt("点数"));
-
+            while (rs.next()) {
+                TestBean bean = new TestBean();
+                bean.setStudentNo(rs.getString("STUDENT_NO"));
+                bean.setSubjectCd(rs.getString("SUBJECT_CD"));
+                bean.setNo(rs.getInt("NO"));
+                bean.setPoint(rs.getInt("POINT"));
                 list.add(bean);
             }
 
@@ -128,7 +104,7 @@ public class TestDao {
             ps.close();
             conn.close();
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

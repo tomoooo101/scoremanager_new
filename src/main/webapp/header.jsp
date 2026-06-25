@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <style>
-
     header {
         background-color: #1d1d1f;
         padding: 12px 20px;
@@ -15,7 +14,7 @@
         font-weight: 400;
         color: #f5f5f7;
     }
-    header div {
+    header .user-info {
         font-size: 13px;
         color: #86868b;
     }
@@ -29,7 +28,6 @@
     }
 </style>
 
-<head>
 <header>
     <h1>得点管理システム</h1>
     <div class="user-info">

@@ -164,8 +164,7 @@
     </nav>
 
     <main class="main-content">
-        <div class="menu-title-box">科目
-        管理</div>
+        <div class="menu-title-box">科目管理</div>
         
         <div class="top-links">
             <a href="student_create.jsp">新規登録</a>
