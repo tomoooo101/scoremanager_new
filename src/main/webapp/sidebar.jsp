@@ -43,14 +43,14 @@
 <nav class="sidebar">
     <ul>
         <li><a href="menu.jsp">メニュー</a></li>
-        <li><a href="student_list.jsp">学生管理</a></li>
+        <li><a href="StudentList.action">学生管理</a></li>
         <li>
             <span class="menu-category">成績管理</span>
             <ul class="sub-menu">
-                <li><a href="subject_create.jsp">成績登録</a></li>
-                <li><a href="grade.jsp">成績参照</a></li>
+                <li><a href="TestRegist.action">成績登録</a></li>
+                <li><a href="TestList.action">成績参照</a></li>
             </ul>
         </li>
-        <li><a href="subject_list.jsp">科目管理</a></li>
+        <li><a href="SubjectList.action">科目管理</a></li>
     </ul>
 </nav>

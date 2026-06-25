@@ -1,19 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<style>
-
-    footer {
-        background-color: #f5f5f7;
-        border-top: 1px solid #d2d2d7;
-        text-align: center;
-        padding: 20px 0;
-        font-size: 11px;
-        color: #86868b;
-        margin-top: 30px;
-        line-height: 1.5;
-    }
-</style>
-
-<footer>
-    &copy; 2023 TIC<br>
-    大原学園
-</footer>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<html>
+<head>
+	<%@ include file="/common/head.jsp" %>
+</head>
+<body>
+	<%@ include file="/common/header.jsp" %>
+	
+	<div class="container">
+	    <%@ include file="/common/sidebar.jsp" %>
+		<div class="main score-complete-page">
+		
+		    <div class="complete-card">
+		
+		        <p class="complete-message">
+		            エラーが発生しました。
+		        </p>
+		
+		    </div>
+		
+		</div>
+	<%@ include file="/common/footer.jsp" %>
+</body>
+</html>
