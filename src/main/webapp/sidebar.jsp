@@ -12,7 +12,7 @@
 <nav class="sidebar">
     <ul>
         <li><a href="${pageContext.request.contextPath}/menu.jsp">メニュー</a></li>
-        <li><a href="${pageContext.request.contextPath}/StudentList.action">学生管理</a></li>
+        <li><a href="${pageContext.request.contextPath}/student_list.jsp">学生管理</a></li>
         <li>
             <span class="menu-category">成績管理</span>
             <ul class="sub-menu">

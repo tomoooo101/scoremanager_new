@@ -66,6 +66,6 @@
     <h1>得点管理システム</h1>
     <div class="user-info">
         ${sessionScope.loginUser.name}様
-        <a href="${pageContext.request.contextPath}/Logout.action">ログアウト</a>
+        <a href="${pageContext.request.contextPath}/logout.jsp">ログアウト</a>
     </div>
 </header>
