@@ -9,9 +9,9 @@ import java.sql.Statement;
 import bean.TeacherBean;
 
 public class TeacherDao {
-    private final String URL = "jdbc:h2:~/bank"; 
-    private final String USER = "sa";            
-    private final String PASSWORD = "";          
+    private final String URL = "jdbc:h2:~/bank";
+    private final String USER = "sa";
+    private final String PASSWORD = "";
 
     public TeacherBean login(String id, String password) {
         TeacherBean teacher = null;
@@ -41,7 +41,7 @@ public class TeacherDao {
                     teacher.setPassword(rs.getString("PASSWORD"));
                     teacher.setName(rs.getString("NAME"));
                     try {
-                        teacher.setSchoolCode(rs.getString("SCHOOL_CD")); 
+                        teacher.setSchoolCode(rs.getString("SCHOOL_CD"));
                     } catch (Exception e) {
                         try { teacher.setSchoolCode(rs.getString("SCHOOL_CODE")); } catch (Exception ex) {}
                     }
@@ -49,7 +49,7 @@ public class TeacherDao {
             }
         } catch (Exception e) {
             System.err.println("【重大エラー】ログイン処理中に例外が発生しました！");
-            e.printStackTrace(); 
+            e.printStackTrace();
             return null;
         }
         return teacher;
@@ -58,39 +58,44 @@ public class TeacherDao {
     // 💡 全テーブルがなければ自動作成する無敵メソッド
     private void initializeDatabase() {
         // 1. TEACHER テーブル
-        String createTeacher = "CREATE TABLE IF NOT EXISTS TEACHER ("
-                + "ID VARCHAR(10) PRIMARY KEY, "
-                + "PASSWORD VARCHAR(10) NOT NULL, "
-                + "NAME VARCHAR(10) NOT NULL, "
-                + "SCHOOL_CD CHAR(3))";
+        String createTeacher = """
+			CREATE TABLE IF NOT EXISTS TEACHER (\
+			ID VARCHAR(10) PRIMARY KEY, \
+			PASSWORD VARCHAR(10) NOT NULL, \
+			NAME VARCHAR(10) NOT NULL, \
+			SCHOOL_CD CHAR(3))""";
         
         // 2. STUDENT テーブル (エラー500の原因)
-        String createStudent = "CREATE TABLE IF NOT EXISTS STUDENT ("
-                + "NO VARCHAR(10) PRIMARY KEY, "
-                + "NAME VARCHAR(10) NOT NULL, "
-                + "ENT_YEAR INT NOT NULL, "
-                + "CLASS_NUM VARCHAR(3) NOT NULL, "
-                + "IS_ATTEND BOOLEAN DEFAULT TRUE, "
-                + "SCHOOL_CD CHAR(3))";
+        String createStudent = """
+			CREATE TABLE IF NOT EXISTS STUDENT (\
+			NO VARCHAR(10) PRIMARY KEY, \
+			NAME VARCHAR(10) NOT NULL, \
+			ENT_YEAR INT NOT NULL, \
+			CLASS_NUM VARCHAR(3) NOT NULL, \
+			IS_ATTEND BOOLEAN DEFAULT TRUE, \
+			SCHOOL_CD CHAR(3))""";
 
         // 3. SUBJECT テーブル (科目管理用)
-        String createSubject = "CREATE TABLE IF NOT EXISTS SUBJECT ("
-                + "CD CHAR(3) PRIMARY KEY, "
-                + "NAME VARCHAR(20) NOT NULL, "
-                + "SCHOOL_CD CHAR(3))";
+        String createSubject = """
+			CREATE TABLE IF NOT EXISTS SUBJECT (\
+			CD CHAR(3) PRIMARY KEY, \
+			NAME VARCHAR(20) NOT NULL, \
+			SCHOOL_CD CHAR(3))""";
 
         // 4. SCORE / TEST テーブル (成績参照・登録エラー500の原因、両方に対応できるようにします)
-        String createScore = "CREATE TABLE IF NOT EXISTS SCORE ("
-                + "STUDENT_NO VARCHAR(10), "
-                + "SUBJECT_CD CHAR(3), "
-                + "POINT INT, "
-                + "PRIMARY KEY(STUDENT_NO, SUBJECT_CD))";
+        String createScore = """
+			CREATE TABLE IF NOT EXISTS SCORE (\
+			STUDENT_NO VARCHAR(10), \
+			SUBJECT_CD CHAR(3), \
+			POINT INT, \
+			PRIMARY KEY(STUDENT_NO, SUBJECT_CD))""";
         
-        String createTest = "CREATE TABLE IF NOT EXISTS TEST ("
-                + "STUDENT_NO VARCHAR(10), "
-                + "SUBJECT_CD CHAR(3), "
-                + "POINT INT, "
-                + "PRIMARY KEY(STUDENT_NO, SUBJECT_CD))";
+        String createTest = """
+			CREATE TABLE IF NOT EXISTS TEST (\
+			STUDENT_NO VARCHAR(10), \
+			SUBJECT_CD CHAR(3), \
+			POINT INT, \
+			PRIMARY KEY(STUDENT_NO, SUBJECT_CD))""";
 
         // 初期データ（テスト用データも少し仕込みます）
         String insertTeacher = "INSERT INTO TEACHER (ID, PASSWORD, NAME, SCHOOL_CD) "

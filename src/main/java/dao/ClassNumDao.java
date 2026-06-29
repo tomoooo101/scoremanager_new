@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import bean.ClassNumBean;
 
 public class ClassNumDao {
     private final String URL = "jdbc:h2:~/bank";

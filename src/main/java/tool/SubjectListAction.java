@@ -1,6 +1,7 @@
 package tool;
 
 import java.io.IOException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,13 +12,15 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SubjectListAction extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    @Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // 科目一覧画面（JSP）へ遷移させる準備
         request.getRequestDispatcher("subject_list.jsp").forward(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    @Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
     }
