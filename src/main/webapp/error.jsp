@@ -1,25 +1,16 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html>
-<head>
-	<%@ include file="/common/head.jsp" %>
-</head>
+<head><meta charset="UTF-8"><title>得点管理システム - エラー</title></head>
 <body>
-	<%@ include file="/common/header.jsp" %>
-	
-	<div class="container">
-	    <%@ include file="/common/sidebar.jsp" %>
-		<div class="main score-complete-page">
-		
-		    <div class="complete-card">
-		
-		        <p class="complete-message">
-		            エラーが発生しました。
-		        </p>
-		
-		    </div>
-		
-		</div>
-	<%@ include file="/common/footer.jsp" %>
+<%@ include file="header.jsp" %>
+<div class="wrapper">
+    <%@ include file="sidebar.jsp" %>
+    <div class="main-content">
+        <div class="title-bar">エラー</div>
+        <p style="font-size:14px;">エラーが発生しました。</p>
+    </div>
+</div>
+<%@ include file="footer.jsp" %>
 </body>
 </html>

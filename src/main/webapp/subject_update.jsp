@@ -1,112 +1,38 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>科目情報変更</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body{
-            background:#f5f5f5;
-        }
-
-        .header{
-            background:#e9edf4;
-            padding:15px;
-        }
-
-        .content{
-            margin-left:200px;
-            min-height:400px;
-            border-left:1px solid #ddd;
-            padding-left:20px;
-        }
-
-        .footer{
-            background:#e9e9e9;
-            text-align:center;
-            margin-top:50px;
-            padding:10px;
-            clear:both;
-        }
-
-        .title-bar{
-            background:#eeeeee;
-            padding:5px 10px;
-            margin-bottom:20px;
-        }
-    </style>
-</head>
+<head><meta charset="UTF-8"><title>得点管理システム - 科目変更</title></head>
 <body>
+<%@ include file="header.jsp" %>
+<div class="wrapper">
+    <%@ include file="sidebar.jsp" %>
+    <div class="main-content">
+        <div class="title-bar">科目情報変更</div>
 
-<div class="container">
-
-    <!-- ヘッダー -->
-    <%-- 💡 1. 外からヘッダーを取ってくる（上の重複していた古い header は消去しました） --%>
-    <%@ include file="header.jsp" %>
-
-    <!-- サイドメニュー -->
-    <div class="sidebar">
-        <div><a href="menu.jsp">メニュー</a></div>
-        <div><a href="student_list.jsp">学生管理</a></div>
-        <div><a href="test_regist.jsp">成績管理</a></div>
-        <div><a href="test_list.jsp">成績参照</a></div>
-        <div><a href="subject_list.jsp">科目管理</a></div>
-    </div>
-
-    <!-- メイン -->
-    <div class="content">
-
-        <div class="title-bar">
-            <strong>科目情報変更</strong>
-        </div>
-
-        <form action="SubjectChangeAction" method="post">
-
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">
-                    科目コード
-                </label>
-
-                <div class="col-sm-10">
-                    F02
-                </div>
+        <c:if test="${not empty errors}">
+            <div class="alert-error">
+                <c:forEach var="e" items="${errors}"><div>${e}</div></c:forEach>
             </div>
+        </c:if>
 
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">
-                    科目名
-                </label>
-
-                <div class="col-sm-10">
-                    <input
-                        type="text"
-                        name="subjectName"
-                        class="form-control"
-                        value="Javaプログラミング基礎">
-                </div>
+        <form action="${pageContext.request.contextPath}/SubjectChange.action" method="post" style="max-width:400px;">
+            <div class="form-group">
+                <label>科目コード</label>
+                <input type="text" name="cd" class="form-control" value="${subject.cd}" readonly>
             </div>
-
-            <button
-                type="submit"
-                class="btn btn-primary btn-sm">
-                変更
-            </button>
-
+            <div class="form-group">
+                <label>科目名</label>
+                <input type="text" name="name" class="form-control" maxlength="20" value="${subject.name}" required>
+            </div>
+            <button type="submit" class="btn btn-gray">変更</button>
         </form>
 
-        <div class="mt-2">
-            <a href="subject_list.jsp">戻る</a>
+        <div class="link-area">
+            <a href="${pageContext.request.contextPath}/SubjectList.action">戻る</a>
         </div>
-
     </div>
-
 </div>
-
-<!-- フッター -->
 <%@ include file="footer.jsp" %>
-
 </body>
 </html>

@@ -1,19 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>得点管理システム - ログアウト</title>
-</head>
+<head><meta charset="UTF-8"><title>得点管理システム - 科目変更完了</title></head>
 <body>
 <%@ include file="header.jsp" %>
 <div class="wrapper">
     <%@ include file="sidebar.jsp" %>
     <div class="main-content">
-        <div class="title-bar">ログアウト</div>
-        <p style="font-size:14px; margin-bottom:15px;">ログアウトしました。</p>
+        <div class="title-bar">科目情報変更</div>
+        <div class="alert-success">変更が完了しました</div>
         <div class="link-area">
-            <a href="${pageContext.request.contextPath}/Login.action">ログイン画面へ</a>
+            <a href="${pageContext.request.contextPath}/SubjectList.action">科目一覧</a>
         </div>
     </div>
 </div>

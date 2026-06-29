@@ -1,137 +1,53 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>学生情報変更</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body{
-            background-color:#f5f5f5;
-        }
-
-        .header{
-            background:#e9edf4;
-            padding:15px;
-        }
-
-        .content{
-            padding:20px;
-        }
-
-        .footer{
-            background:#ddd;
-            text-align:center;
-            padding:10px;
-            margin-top:30px;
-        }
-
-        .menu-link{
-            display:block;
-            margin-bottom:10px;
-            font-size:14px;
-        }
-
-        .form-title{
-            background:#eee;
-            padding:8px;
-            font-weight:bold;
-            margin-bottom:20px;
-        }
-    </style>
-</head>
+<head><meta charset="UTF-8"><title>得点管理システム - 学生変更</title></head>
 <body>
+<%@ include file="header.jsp" %>
+<div class="wrapper">
+    <%@ include file="sidebar.jsp" %>
+    <div class="main-content">
+        <div class="title-bar">学生情報変更</div>
 
-<div class="container">
-
-    <!-- ヘッダー -->
-    <%-- 💡 1. 外からヘッダーを取ってくる（直書きされていた大原太郎の文字と不要なdivは消去しました） --%>
-    <%@ include file="header.jsp" %>
-
-    <div class="row mt-3">
-
-        <!-- 左メニュー -->
-        <div class="col-md-2 sidebar">
-
-            <a href="menu.jsp">メニュー</a>
-            <a href="student_list.jsp">学生管理</a>
-            <a href="grade.jsp">成績管理</a>
-            <a href="subject_create.jsp">成績登録</a>
-            <a href="grade.jsp">成績参照</a>
-            <a href="subject_create.jsp">科目管理</a>
-
-        </div>
-
-        <!-- メイン -->
-        <div class="col-md-10 content">
-
-            <div class="form-title">
-                学生情報変更
+        <c:if test="${not empty errors}">
+            <div class="alert-error">
+                <c:forEach var="e" items="${errors}"><div>${e}</div></c:forEach>
             </div>
+        </c:if>
 
-            <form action="StudentUpdateExecute.action" method="post">
+        <form action="${pageContext.request.contextPath}/StudentChange.action" method="post" style="max-width:500px;">
+            <div class="form-group">
+                <label>入学年度</label>
+                <input type="text" name="ent_year" class="form-control" value="${student.entYear}" readonly>
+            </div>
+            <div class="form-group">
+                <label>学生番号</label>
+                <input type="text" name="no" class="form-control" value="${student.no}" readonly>
+            </div>
+            <div class="form-group">
+                <label>氏名</label>
+                <input type="text" name="name" class="form-control" maxlength="30" value="${student.name}" required>
+            </div>
+            <div class="form-group">
+                <label>クラス</label>
+                <select name="class_num" class="form-control">
+                    <c:forEach var="cls" items="${classes}">
+                        <option value="${cls}" <c:if test="${cls == student.classNum}">selected</c:if>>${cls}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" name="is_attend" value="true" <c:if test="${student.attend}">checked</c:if>> 在学中</label>
+            </div>
+            <input type="submit" name="login" value="変更" class="btn btn-gray">
+        </form>
 
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">入学年度</label>
-                    <div class="col-sm-4">
-                        <span class="form-control-plaintext">2023</span>
-                    </div>
-                </div>
-
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">学生番号</label>
-                    <div class="col-sm-4">
-                        <span class="form-control-plaintext">123456</span>
-                    </div>
-                </div>
-
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">氏名</label>
-                    <div class="col-sm-8">
-                        <input type="text"
-                               class="form-control"
-                               name="name"
-                               value="大原次郎">
-                    </div>
-                </div>
-
-                <div class="mb-3 row">
-                    <label class="col-sm-2 col-form-label">クラス</label>
-                    <div class="col-sm-8">
-                        <select name="classNum" class="form-select">
-                            <option value="211">211</option>
-                            <option value="213">213</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label>
-                        <input type="checkbox"
-                               name="isAttend"
-                               checked>
-                        在学中
-                    </label>
-                </div>
-
-                <button type="submit"
-                        class="btn btn-primary">
-                    変更
-                </button>
-
-            </form>
-
+        <div class="link-area">
+            <a href="${pageContext.request.contextPath}/StudentList.action">戻る</a>
         </div>
-
     </div>
-
-    <!-- フッター -->
-    <%-- 💡 2. 外からフッターを取ってくる --%>
-    <%@ include file="footer.jsp" %>
-
 </div>
-
+<%@ include file="footer.jsp" %>
 </body>
 </html>

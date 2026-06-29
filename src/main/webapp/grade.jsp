@@ -1,186 +1,98 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>得点管理システム</title>
-    <style>
-        body {
-            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ffffff;
-            color: #333333;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .main-wrapper {
-            width: 75%;
-            margin: 30px auto 0 auto;
-            display: flex;
-            gap: 4%;
-            flex: 1;
-        }
-        .content {
-            width: 78%;
-        }
-        .title-bar {
-            background-color: #f0f0f0;
-            padding: 12px 20px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        .search-box {
-            background-color: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .search-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .search-row:last-child {
-            margin-bottom: 0;
-        }
-        .row-label {
-            width: 100px;
-            font-size: 14px;
-            color: #666;
-            font-weight: bold;
-        }
-        .search-form {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-grow: 1;
-        }
-        .search-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .search-group label {
-            font-size: 13px;
-            color: #333;
-        }
-        .search-select {
-            width: 120px;
-            padding: 6px 10px;
-            font-size: 14px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            background-color: #fff;
-        }
-        .search-select.subject {
-            width: 200px;
-        }
-        .search-input {
-            width: 200px;
-            padding: 6px 10px;
-            font-size: 14px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-        }
-        .btn-search {
-            background-color: #555555;
-            color: white;
-            border: none;
-            padding: 6px 18px;
-            font-size: 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-left: auto;
-        }
-        .btn-search:hover {
-            background-color: #444444;
-        }
-        .result-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            border: 1px solid #e0e0e0;
-        }
-        .result-table th {
-            border-bottom: 2px solid #333;
-            background-color: #ffffff;
-            padding: 10px 8px;
-            text-align: left;
-            font-weight: bold;
-        }
-        .result-table td {
-            border-bottom: 1px solid #e0e0e0;
-            padding: 12px 8px;
-            color: #333;
-        }
-    </style>
-</head>
+<head><meta charset="UTF-8"><title>得点管理システム - 成績管理</title></head>
 <body>
-
 <%@ include file="header.jsp" %>
+<div class="wrapper">
+    <%@ include file="sidebar.jsp" %>
+    <div class="main-content">
+        <div class="title-bar">成績管理</div>
 
-    <div class="main-wrapper">
-        
-        <%@ include file="sidebar.jsp" %>
+        <c:if test="${not empty errorMsg}">
+            <div class="alert-error">${errorMsg}</div>
+        </c:if>
 
-        <div class="content">
-            <div class="title-bar">成績参照</div>
-
-            <div class="search-box">
-                <form action="TestList.action" method="get" class="search-row">
-                    <div class="row-label">科目情報</div>
-                    <div class="search-form">
-                        <div class="search-group">
-                            <label>入学年度</label>
-                            <select name="f1" class="search-select">
-                                <option value="2021" selected>2021</option>
-                                <option value="2022">2022</option>
-                                <option value="2023">2023</option>
-                            </select>
-                        </div>
-                        <div class="search-group">
-                            <label>クラス</label>
-                            <select name="f2" class="search-select">
-                                <option value="201" selected>201</option>
-                                <option value="202">202</option>
-                            </select>
-                        </div>
-                        <div class="search-group">
-                            <label>科目</label>
-                            <select name="f3" class="search-select subject">
-                                <option value="E02" selected>情報処理基礎知識Ⅰ</option>
-                                <option value="E03">アルゴリズム基礎</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-search">検索</button>
-                    </div>
-                </form>
-
-                <hr style="border: 0; border-top: 1px dashed #e0e0e0; margin: 15px 0;">
-
-                <form action="TestList.action" method="get" class="search-row">
-                    <div class="row-label">学生情報</div>
-                    <div class="search-form">
-                        <div class="search-group">
-                            <label>学生番号</label>
-                            <input type="text" name="student_no" class="search-input" placeholder="学生番号を入力してください">
-                        </div>
-                        <button type="submit" class="btn-search">検索</button>
-                    </div>
-                </form>
+        <form action="${pageContext.request.contextPath}/TestRegist.action" method="get" class="filter-box">
+            <div class="filter-group">
+                <label>入学年度</label>
+                <select name="f1">
+                    <option value="">--------</option>
+                    <c:forEach var="year" items="${years}">
+                        <option value="${year}" <c:if test="${year == param.f1}">selected</c:if>>${year}</option>
+                    </c:forEach>
+                </select>
             </div>
+            <div class="filter-group">
+                <label>クラス</label>
+                <select name="f2">
+                    <option value="">--------</option>
+                    <c:forEach var="cls" items="${classes}">
+                        <option value="${cls}" <c:if test="${cls == param.f2}">selected</c:if>>${cls}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>科目</label>
+                <select name="f3">
+                    <option value="">--------</option>
+                    <c:forEach var="subject" items="${subjects}">
+                        <option value="${subject.cd}" <c:if test="${subject.cd == param.f3}">selected</c:if>>${subject.name}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>回数</label>
+                <select name="f4">
+                    <option value="">--------</option>
+                    <option value="1" <c:if test="${param.f4 == '1'}">selected</c:if>>1</option>
+                    <option value="2" <c:if test="${param.f4 == '2'}">selected</c:if>>2</option>
+                    <option value="3" <c:if test="${param.f4 == '3'}">selected</c:if>>3</option>
+                </select>
+            </div>
+            <div class="filter-group" style="margin-top:18px;">
+                <button type="submit" class="btn btn-gray">検索</button>
+            </div>
+        </form>
 
-        </div>
+        <c:if test="${not empty tests}">
+            <div style="font-size:14px; margin-bottom:10px;">${subjectName}（${param.f4}回目）</div>
+            <form action="${pageContext.request.contextPath}/TestRegist.action" method="post">
+                <input type="hidden" name="count" value="${param.f4}">
+                <input type="hidden" name="subject" value="${param.f3}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>入学年度</th>
+                            <th>クラス</th>
+                            <th>学生番号</th>
+                            <th>氏名</th>
+                            <th>点数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="test" items="${tests}">
+                            <tr>
+                                <td>${test.student.entYear}</td>
+                                <td>${test.student.classNum}</td>
+                                <td>${test.student.no}</td>
+                                <td>${test.student.name}</td>
+                                <td>
+                                    <input type="text" name="point_${test.student.no}" value="${test.point}" style="width:60px; padding:4px; border:1px solid #ccc; border-radius:4px;">
+                                    <input type="hidden" name="regist" value="${test.student.no}">
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+                <div style="margin-top:15px;">
+                    <input type="submit" value="登録して終了" class="btn btn-gray">
+                </div>
+            </form>
+        </c:if>
     </div>
-
+</div>
 <%@ include file="footer.jsp" %>
-
 </body>
 </html>
